@@ -252,7 +252,11 @@ export class BundlingDockerImage {
     }
 
     const containerId = match[1];
-    const containerPath = `${containerId}:${imagePath}`;
+
+    let containerPath = `${containerId}:${imagePath}`;
+    if (containerPath.endsWith('/')) containerPath += '.';
+    else if (!containerPath.endsWith('/.')) containerPath += '/.';
+
     const destPath = outputPath ?? FileSystem.mkdtemp('cdk-docker-cp-');
     try {
       dockerExec(['cp', containerPath, destPath]);
